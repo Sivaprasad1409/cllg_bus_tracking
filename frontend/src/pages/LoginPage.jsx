@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuthStore from '../store/authStore';
 import { login } from '../api/endpoints';
@@ -14,14 +14,15 @@ export default function LoginPage() {
   const user = useAuthStore((s) => s.user);
 
   // If already logged in, redirect
-  if (isAuthenticated && user) {
-    if (user.role === 'admin') {
-      navigate('/admin', { replace: true });
-    } else {
-      navigate('/dashboard', { replace: true });
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      if (user.role === 'admin') {
+        navigate('/admin', { replace: true });
+      } else {
+        navigate('/dashboard', { replace: true });
+      }
     }
-    return null;
-  }
+  }, [isAuthenticated, user, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
